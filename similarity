@@ -1,0 +1,26 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import sentiment
+
+def main(title1, title2):
+    # load review
+    review1 = sentiment.open_review(title1)
+    review2 = sentiment.open_review(title2)
+
+    # print(review1)
+    # print(review2)
+
+    doc1 = ''
+    doc2 = ''
+    for i in range(0, len(review1)-1):
+        doc1 = doc1 + review1[i] + '\n'
+    for i in range(0, len(review2)-1):
+        doc2 = doc2 + review2[i] + '\n'
+
+    corpus = [doc1, doc2]
+    vectorizer = TfidfVectorizer()
+    X = vectorizer.fit_transform(corpus)
+    X = X.todense()
+
+    sim_rate = 100 * cosine_similarity(X[0], X[1])
+    return sim_rate[0][0]
